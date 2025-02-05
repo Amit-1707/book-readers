@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Marketplace</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Book Marketplace</h1>
+        <nav>
+            <ul>
+                <li><a href="#browse">Browse Books</a></li>
+                <li><a href="#sell">Sell Books</a></li>
+                <li><a href="#request">Request a Book</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="browse">
+        <h2>Browse Books</h2>
+        <input type="text" id="search" placeholder="Search books...">
+        <div id="book-list"></div>
+    </section>
+
+    <section id="sell">
+        <h2>Sell a Book</h2>
+        <form id="sell-form">
+            <input type="text" id="title" placeholder="Book Title" required>
+            <input type="text" id="author" placeholder="Author" required>
+            <input type="text" id="isbn" placeholder="ISBN">
+            <input type="file" id="image" accept="image/*">
+            <button type="submit">List Book</button>
+        </form>
+    </section>
+
+    <section id="request">
+        <h2>Request a Book</h2>
+        <form id="request-form">
+            <input type="text" id="request-title" placeholder="Book Title" required>
+            <input type="text" id="request-author" placeholder="Author">
+            <button type="submit">Submit Request</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Book Marketplace. All rights reserved.</p>
+    </footer>
+</body>
+</html>
