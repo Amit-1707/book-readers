@@ -12,11 +12,11 @@
         <h1>Book Marketplace</h1>
         <nav>
             <ul>
-                <li><a href="#browse">Browse Books</a></li>
-                <li><a href="#sell">Sell Books</a></li>
-                <li><a href="#request">Request a Book</a></li>
-                <li><a href="#cart">Cart (<span id="cart-count">0</span>)</a></li>
-                <li><a href="#login">Login</a></li>
+                <li><button onclick="location.href='#browse'">Browse Books</button></li>
+                <li><button onclick="location.href='#sell'">Sell a Book</button></li>
+                <li><button onclick="location.href='#request'">Request a Book</button></li>
+                <li><button onclick="location.href='#cart'">Shopping Cart (<span id="cart-count">0</span>)</button></li>
+                <li><button onclick="location.href='#login'">Login</button></li>
             </ul>
         </nav>
     </header>
@@ -62,11 +62,19 @@
     </section>
 
     <section id="login">
-        <h2>Login / Register</h2>
+        <h2>Login</h2>
         <form id="login-form">
             <input type="text" id="username" placeholder="Username" required>
             <input type="password" id="password" placeholder="Password" required>
             <button type="submit">Login</button>
+        </form>
+        <h2>Register</h2>
+        <form id="register-form">
+            <input type="text" id="reg-username" placeholder="Username" required>
+            <input type="email" id="reg-email" placeholder="Email" required>
+            <input type="password" id="reg-password" placeholder="Password" required>
+            <input type="password" id="reg-confirm-password" placeholder="Confirm Password" required>
+            <button type="submit">Register</button>
         </form>
     </section>
 
