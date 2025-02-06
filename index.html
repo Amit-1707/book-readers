@@ -26,10 +26,43 @@
         <p>"Duniya ek khwab hai aur hum sab us mein musafir hain." - Mirza Ghalib</p>
         <p>"साहित्य समाज का दर्पण होता है।" - मुंशी प्रेमचंद</p>
         <p>"Books are a uniquely portable magic." - Stephen King</p>
+        
+        <div class="slideshow-container">
+            <div class="slide fade">
+                <img src="images/book1.jpg" alt="Book 1">
+            </div>
+            <div class="slide fade">
+                <img src="images/book2.jpg" alt="Book 2">
+            </div>
+            <div class="slide fade">
+                <img src="images/book3.jpg" alt="Book 3">
+            </div>
+            <div class="slide fade">
+                <img src="images/author1.jpg" alt="Author 1">
+            </div>
+            <div class="slide fade">
+                <img src="images/author2.jpg" alt="Author 2">
+            </div>
+        </div>
     </section>
 
     <footer>
         <p>&copy; 2025 Book Marketplace. All rights reserved.</p>
     </footer>
+
+    <script>
+        let slideIndex = 0;
+        function showSlides() {
+            let slides = document.getElementsByClassName("slide");
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            slideIndex++;
+            if (slideIndex > slides.length) {slideIndex = 1}
+            slides[slideIndex - 1].style.display = "block";
+            setTimeout(showSlides, 3000);
+        }
+        showSlides();
+    </script>
 </body>
 </html>
