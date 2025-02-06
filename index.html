@@ -15,6 +15,8 @@
                 <li><a href="#browse">Browse Books</a></li>
                 <li><a href="#sell">Sell Books</a></li>
                 <li><a href="#request">Request a Book</a></li>
+                <li><a href="#cart">Cart (<span id="cart-count">0</span>)</a></li>
+                <li><a href="#login">Login</a></li>
             </ul>
         </nav>
     </header>
@@ -31,6 +33,7 @@
             <input type="text" id="title" placeholder="Book Title" required>
             <input type="text" id="author" placeholder="Author" required>
             <input type="text" id="isbn" placeholder="ISBN">
+            <input type="number" id="price" placeholder="Price" required>
             <input type="file" id="image" accept="image/*">
             <button type="submit">List Book</button>
         </form>
@@ -42,6 +45,21 @@
             <input type="text" id="request-title" placeholder="Book Title" required>
             <input type="text" id="request-author" placeholder="Author">
             <button type="submit">Submit Request</button>
+        </form>
+    </section>
+
+    <section id="cart">
+        <h2>Shopping Cart</h2>
+        <div id="cart-items"></div>
+        <button id="checkout">Checkout</button>
+    </section>
+
+    <section id="login">
+        <h2>Login / Register</h2>
+        <form id="login-form">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Login</button>
         </form>
     </section>
 
