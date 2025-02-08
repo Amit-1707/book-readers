@@ -3,16 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sell a Book</title>
+    <title>Sell a Book - Book Marketplace</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
         <h1>Sell a Book</h1>
-        <a href="index.html">Home</a>
+        <nav>
+            <ul>
+                <li><button onclick="location.href='index.html'">Home</button></li>
+                <li><button onclick="location.href='browse.html'">Browse Books</button></li>
+                <li><button onclick="location.href='request.html'">Request a Book</button></li>
+                <li><button onclick="location.href='cart.html'">Shopping Cart</button></li>
+                <li><button onclick="location.href='login_register.html'">Login / Register</button></li>
+            </ul>
+        </nav>
     </header>
-    <section>
-        <p>Fill in the details to list your book for sale.</p>
+
+    <section id="sell-book">
+        <h2>Sell Your Book</h2>
+        <form id="sellForm" action="submit_book.php" method="post" enctype="multipart/form-data">
+            <label for="title">Book Title:</label>
+            <input type="text" id="title" name="title" required>
+            
+            <label for="author">Author:</label>
+            <input type="text" id="author" name="author" required>
+            
+            <label for="price">Price (INR):</label>
+            <input type="number" id="price" name="price" required>
+            
+            <label for="condition">Condition:</label>
+            <select id="condition" name="condition" required>
+                <option value="New">New</option>
+                <option value="Like New">Like New</option>
+                <option value="Good">Good</option>
+                <option value="Acceptable">Acceptable</option>
+            </select>
+            
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="4" required></textarea>
+            
+            <label for="bookImage">Upload Book Image:</label>
+            <input type="file" id="bookImage" name="bookImage" accept="image/*" required>
+            
+            <label for="sellerName">Your Name:</label>
+            <input type="text" id="sellerName" name="sellerName" required>
+            
+            <label for="sellerContact">Contact Email:</label>
+            <input type="email" id="sellerContact" name="sellerContact" required>
+            
+            <button type="submit">Submit</button>
+        </form>
     </section>
+
+    <footer>
+        <p>&copy; 2025 Book Marketplace. All rights reserved.</p>
+    </footer>
 </body>
 </html>
