@@ -3,66 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Marketplace</title>
+    <title>Browse Books - Book Marketplace</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
 </head>
 <body>
     <header>
-        <h1>Book Marketplace</h1>
+        <h1>Browse Books</h1>
         <nav>
             <ul>
-                <li><button onclick="location.href='browse.html'">Browse Books</button></li>
+                <li><button onclick="location.href='index.html'">Home</button></li>
                 <li><button onclick="location.href='sell.html'">Sell a Book</button></li>
                 <li><button onclick="location.href='request.html'">Request a Book</button></li>
-                <li><button onclick="location.href='cart.html'">Shopping Cart (<span id="cart-count">0</span>)</button></li>
+                <li><button onclick="location.href='cart.html'">Shopping Cart</button></li>
                 <li><button onclick="location.href='login_register.html'">Login / Register</button></li>
             </ul>
         </nav>
     </header>
 
-    <section id="home">
-        <h2>Welcome to Book Marketplace</h2>
-        <p>"Duniya ek khwab hai aur hum sab us mein musafir hain." - Mirza Ghalib</p>
-        <p>"\u0938\u093e\u0939\u093f\u0924\u094d\u092f \u0938\u092e\u093e\u091c \u0915\u093e \u0926\u0930\u094d\u092a\u0923 \u0939\u094b\u0924\u093e \u0939\u0948\u0964" - \u092e\u0941\u0902\u0936\u0940 \u092a\u094d\u0930\u0947\u092e\u091a\u0902\u0926</p>
-        <p>"Books are a uniquely portable magic." - Stephen King</p>
-        
-        <div class="slideshow-container">
-            <div class="slide fade">
-                <img src="images/book1.jpg" alt="Book 1">
-            </div>
-            <div class="slide fade">
-                <img src="images/book2.jpg" alt="Book 2">
-            </div>
-            <div class="slide fade">
-                <img src="images/book3.jpg" alt="Book 3">
-            </div>
-            <div class="slide fade">
-                <img src="images/author1.jpg" alt="Author 1">
-            </div>
-            <div class="slide fade">
-                <img src="images/author2.jpg" alt="Author 2">
-            </div>
-        </div>
+    <section id="book-list">
+        <h2>Available Books</h2>
+        <ul>
+            <li><strong>Book Title:</strong> The Great Gatsby | <strong>Author:</strong> F. Scott Fitzgerald | <strong>Price:</strong> ₹300 | <button>Buy Now</button></li>
+            <li><strong>Book Title:</strong> To Kill a Mockingbird | <strong>Author:</strong> Harper Lee | <strong>Price:</strong> ₹250 | <button>Buy Now</button></li>
+            <li><strong>Book Title:</strong> 1984 | <strong>Author:</strong> George Orwell | <strong>Price:</strong> ₹400 | <button>Buy Now</button></li>
+            <li><strong>Book Title:</strong> The Alchemist | <strong>Author:</strong> Paulo Coelho | <strong>Price:</strong> ₹350 | <button>Buy Now</button></li>
+        </ul>
     </section>
 
     <footer>
         <p>&copy; 2025 Book Marketplace. All rights reserved.</p>
     </footer>
-
-    <script>
-        let slideIndex = 0;
-        function showSlides() {
-            let slides = document.getElementsByClassName("slide");
-            for (let i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none";
-            }
-            slideIndex++;
-            if (slideIndex > slides.length) {slideIndex = 1}
-            slides[slideIndex - 1].style.display = "block";
-            setTimeout(showSlides, 3000);
-        }
-        showSlides();
-    </script>
 </body>
 </html>
