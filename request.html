@@ -3,16 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Request a Book</title>
+    <title>Request a Book - Book Marketplace</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
         <h1>Request a Book</h1>
-        <a href="index.html">Home</a>
+        <nav>
+            <ul>
+                <li><button onclick="location.href='index.html'">Home</button></li>
+                <li><button onclick="location.href='browse.html'">Browse Books</button></li>
+                <li><button onclick="location.href='sell.html'">Sell a Book</button></li>
+                <li><button onclick="location.href='cart.html'">Shopping Cart</button></li>
+                <li><button onclick="location.href='login_register.html'">Login / Register</button></li>
+            </ul>
+        </nav>
     </header>
-    <section>
-        <p>Request a book that is not currently available.</p>
+
+    <section id="request-book">
+        <h2>Request a Book</h2>
+        <p>If a book is not available, you can request it here. Sellers will be notified and can list the book for sale.</p>
+        <form id="requestForm" action="submit_request.php" method="post">
+            <label for="title">Book Title:</label>
+            <input type="text" id="title" name="title" required>
+            
+            <label for="author">Author:</label>
+            <input type="text" id="author" name="author">
+            
+            <label for="category">Category:</label>
+            <select id="category" name="category">
+                <option value="Fiction">Fiction</option>
+                <option value="Non-Fiction">Non-Fiction</option>
+                <option value="Academic">Academic</option>
+                <option value="Biography">Biography</option>
+                <option value="Others">Others</option>
+            </select>
+            
+            <label for="preferredCondition">Preferred Condition:</label>
+            <select id="preferredCondition" name="preferredCondition">
+                <option value="New">New</option>
+                <option value="Like New">Like New</option>
+                <option value="Good">Good</option>
+                <option value="Acceptable">Acceptable</option>
+            </select>
+            
+            <label for="buyerName">Your Name:</label>
+            <input type="text" id="buyerName" name="buyerName" required>
+            
+            <label for="buyerContact">Contact Email:</label>
+            <input type="email" id="buyerContact" name="buyerContact" required>
+            
+            <button type="submit">Submit Request</button>
+        </form>
     </section>
+
+    <footer>
+        <p>&copy; 2025 Book Marketplace. All rights reserved.</p>
+    </footer>
 </body>
 </html>
