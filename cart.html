@@ -3,16 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping Cart</title>
+    <title>Shopping Cart - Book Marketplace</title>
     <link rel="stylesheet" href="styles.css">
+    <script>
+        function removeItem(item) {
+            document.getElementById(item).remove();
+            updateTotal();
+        }
+
+        function updateTotal() {
+            let total = 0;
+            document.querySelectorAll('.price').forEach(price => {
+                total += parseInt(price.innerText.replace('₹', ''));
+            });
+            document.getElementById('totalPrice').innerText = 'Total: ₹' + total;
+        }
+    </script>
 </head>
 <body>
     <header>
         <h1>Shopping Cart</h1>
-        <a href="index.html">Home</a>
+        <nav>
+            <ul>
+                <li><button onclick="location.href='index.html'">Home</button></li>
+                <li><button onclick="location.href='browse.html'">Browse Books</button></li>
+                <li><button onclick="location.href='sell.html'">Sell a Book</button></li>
+                <li><button onclick="location.href='request.html'">Request a Book</button></li>
+                <li><button onclick="location.href='login_register.html'">Login / Register</button></li>
+            </ul>
+        </nav>
     </header>
-    <section>
-        <p>Your shopping cart is empty.</p>
+
+    <section id="cart">
+        <h2>Your Shopping Cart</h2>
+        <ul id="cart-items">
+            <li id="item1"><strong>The Great Gatsby</strong> - <span class="price">₹300</span> <button onclick="removeItem('item1')">Remove</button></li>
+            <li id="item2"><strong>1984</strong> - <span class="price">₹400</span> <button onclick="removeItem('item2')">Remove</button></li>
+        </ul>
+        <h3 id="totalPrice">Total: ₹700</h3>
+        <button onclick="alert('Proceeding to Payment')">Proceed to Checkout</button>
     </section>
+
+    <footer>
+        <p>&copy; 2025 Book Marketplace. All rights reserved.</p>
+    </footer>
 </body>
 </html>
