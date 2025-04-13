@@ -6,22 +6,26 @@ window.addEventListener('DOMContentLoaded', () => {
   const loginNav = document.getElementById("loginNav");
   const logoutNav = document.getElementById("logoutNav");
 
-  auth.onAuthStateChanged(user => {
+  firebase.auth().onAuthStateChanged(function(user) {
+    console.log('Auth state changed. User:', user);
     const onLoginPage = window.location.pathname.includes('login_register.html');
 
     if (user) {
-      if (userInfo) userInfo.textContent = `Logged in as ${user.email}`;
-      if (logoutBtn) logoutBtn.classList.remove('d-none');
-      if (logoutNav) logoutNav.style.display = 'inline';
-      if (loginNav) loginNav.style.display = 'none';
+      setTimeout(() => {
+        if (onLoginPage) {
+          window.location.href = 'index.html';
+        }
+      }, 100);
 
-      // Redirect away from login page if already logged in
-      if (onLoginPage) {
-        window.location.href = 'index.html';
-      }
+      if (userInfo) userInfo.textContent = `Logged in as ${user.email}`;
+      if (logoutBtn) logoutBtn.classList.remove("d-none");
+      if (logoutNav) logoutNav.style.display = "inline";
+      if (loginNav) loginNav.style.display = "none";
     } else {
       if (!onLoginPage) {
-        window.location.href = 'login_register.html';
+        setTimeout(() => {
+          window.location.href = 'login_register.html';
+        }, 100);
       }
     }
   });
