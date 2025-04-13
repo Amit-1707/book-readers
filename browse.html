@@ -13,7 +13,7 @@
   <script src="header.js"></script>
   <style>
     body { background-color: #f9f9f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    .book-card { box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; padding: 15px; background-color: #fff; margin-bottom: 20px; height: 100%; }
+    .card-img-top { height: 180px; object-fit: cover; }
     footer { text-align: center; padding: 20px 0; margin-top: 40px; color: #888; font-size: 0.9rem; }
   </style>
 </head>
@@ -38,10 +38,10 @@
   </nav>
 
   <div class="container my-5">
-    <h2 class="mb-4 text-center">Available Books</h2>
+    <h2 class="text-center mb-4">📖 Browse Available Books</h2>
     <input class="form-control mb-4" id="searchBar" type="text" placeholder="Search by title or author...">
-    <div id="book-list" class="row">
-      <p class='text-center text-muted'>Loading books...</p>
+    <div id="book-list" class="row g-4">
+      <p class="text-center text-muted">Loading books...</p>
     </div>
   </div>
 
@@ -52,33 +52,43 @@
     const bookList = document.getElementById("book-list");
     const searchBar = document.getElementById("searchBar");
 
-    db.collection("books").orderBy("timestamp", "desc").get().then(snapshot => {
-      bookList.innerHTML = ""; // Clear loading message
-
+    function renderBooks(snapshot) {
+      bookList.innerHTML = "";
       if (snapshot.empty) {
         bookList.innerHTML = "<p class='text-center text-muted'>No books available at the moment.</p>";
         return;
       }
-
       snapshot.forEach(doc => {
         const data = doc.data();
-        const col = document.createElement("div");
-        col.className = "col-md-4 book-item";
-        col.innerHTML = `
-          <div class="card book-card">
-            <img src="https://via.placeholder.com/300x200?text=Book+Cover" class="card-img-top" alt="Book cover">
+        const card = document.createElement("div");
+        card.className = "col-md-4 book-item";
+        card.innerHTML = `
+          <div class="card h-100">
+            <img src="https://via.placeholder.com/300x180?text=Book+Cover" class="card-img-top" alt="Book Cover">
             <div class="card-body">
               <h5 class="card-title">${data.title}</h5>
-              <p class="card-text"><strong>Author:</strong> ${data.author}</p>
-              <p class="card-text"><strong>Condition:</strong> ${data.condition}</p>
-              <p class="card-text"><strong>Price:</strong> ₹${data.price}</p>
-              <button class="btn btn-outline-primary w-100">Add to Cart</button>
+              <p class="card-text"><strong>Author:</strong> ${data.author}<br>
+              <strong>Condition:</strong> ${data.condition}<br>
+              <strong>Price:</strong> ₹${data.price}</p>
+              <button class="btn btn-outline-primary w-100" onclick='addToCart(${JSON.stringify(data)})'>Add to Cart</button>
             </div>
-          </div>
-        `;
-        bookList.appendChild(col);
+          </div>`;
+        bookList.appendChild(card);
       });
-    });
+    }
+
+    function addToCart(book) {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cart.push(book);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      alert(`${book.title} added to cart!`);
+    }
+
+    db.collection("books").orderBy("timestamp", "desc").get()
+      .then(renderBooks)
+      .catch(err => {
+        bookList.innerHTML = `<p class="text-danger text-center">Failed to load books: ${err.message}</p>`;
+      });
 
     searchBar.addEventListener("keyup", function () {
       const query = this.value.toLowerCase();
