@@ -1,9 +1,10 @@
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyAM6j4MBDb5YfoJDBoDDbvynddTNhAwfpk",
+  authDomain: "book-readers-portal.firebaseapp.com",
+  projectId: "book-readers-portal",
+  storageBucket: "book-readers-portal.firebasestorage.app",
+  messagingSenderId: "54921304286",
+  appId: "1:54921304286:web:7a3827199d810bdfe44a4f",
+  measurementId: "G-YV2NLCP5NL"
 };
 firebase.initializeApp(firebaseConfig);
