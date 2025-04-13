@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -21,8 +22,13 @@
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
+    .form-link {
+      text-align: right;
+      margin-top: 10px;
+    }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h2 class="mb-4 text-center">Login / Register</h2>
@@ -34,6 +40,7 @@
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
         <input type="password" class="form-control" id="password" required>
+        <div class="form-link"><a href="#" id="resetLink">Forgot password?</a></div>
       </div>
       <button type="submit" class="btn btn-primary w-100" id="loginBtn">Login</button>
       <button type="button" class="btn btn-secondary w-100 mt-2" id="registerBtn">Register</button>
@@ -43,6 +50,7 @@
 
   <script>
     const auth = firebase.auth();
+
     window.addEventListener('DOMContentLoaded', () => {
       auth.onAuthStateChanged(user => {
         if (user) {
@@ -75,7 +83,23 @@
           authStatus.innerHTML = '<div class="alert alert-danger">' + error.message + '</div>';
         }
       });
+
+      document.getElementById('resetLink').addEventListener('click', async (e) => {
+        e.preventDefault();
+        const email = emailInput.value;
+        if (!email) {
+          authStatus.innerHTML = '<div class="alert alert-warning">Please enter your email to receive a reset link.</div>';
+          return;
+        }
+        try {
+          await auth.sendPasswordResetEmail(email);
+          authStatus.innerHTML = '<div class="alert alert-info">Reset email sent to ' + email + '.</div>';
+        } catch (error) {
+          authStatus.innerHTML = '<div class="alert alert-danger">' + error.message + '</div>';
+        }
+      });
     });
   </script>
 </body>
+
 </html>
