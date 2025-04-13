@@ -7,14 +7,20 @@ window.addEventListener('DOMContentLoaded', () => {
   const logoutNav = document.getElementById("logoutNav");
 
   auth.onAuthStateChanged(user => {
+    const onLoginPage = window.location.pathname.includes('login_register.html');
+
     if (user) {
       if (userInfo) userInfo.textContent = `Logged in as ${user.email}`;
       if (logoutBtn) logoutBtn.classList.remove('d-none');
       if (logoutNav) logoutNav.style.display = 'inline';
       if (loginNav) loginNav.style.display = 'none';
+
+      // Redirect away from login page if already logged in
+      if (onLoginPage) {
+        window.location.href = 'index.html';
+      }
     } else {
-      if (!window.location.pathname.includes('login_register.html')) {
-        alert('You must be logged in to access this page. Redirecting...');
+      if (!onLoginPage) {
         window.location.href = 'login_register.html';
       }
     }
@@ -22,17 +28,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
-      auth.signOut().then(() => {
-        window.location.href = 'login_register.html';
-      });
+      auth.signOut().then(() => window.location.href = 'login_register.html');
     });
   }
 
   if (logoutNav) {
     logoutNav.addEventListener('click', () => {
-      auth.signOut().then(() => {
-        window.location.href = 'login_register.html';
-      });
+      auth.signOut().then(() => window.location.href = 'login_register.html');
     });
   }
 });
