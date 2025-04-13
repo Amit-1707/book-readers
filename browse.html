@@ -1,37 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Browse Books - Book Marketplace</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Browse Books - Book Marketplace</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1>Browse Books</h1>
-        <nav>
-            <ul>
-                <li><button onclick="location.href='index.html'">Home</button></li>
-                <li><button onclick="location.href='sell.html'">Sell a Book</button></li>
-                <li><button onclick="location.href='request.html'">Request a Book</button></li>
-                <li><button onclick="location.href='cart.html'">Shopping Cart</button></li>
-                <li><button onclick="location.href='login_register.html'">Login / Register</button></li>
-            </ul>
-        </nav>
-    </header>
-
-    <section id="book-list">
-        <h2>Available Books</h2>
-        <ul>
-            <li><strong>Book Title:</strong> The Great Gatsby | <strong>Author:</strong> F. Scott Fitzgerald | <strong>Price:</strong> ₹300 | <button>Buy Now</button></li>
-            <li><strong>Book Title:</strong> To Kill a Mockingbird | <strong>Author:</strong> Harper Lee | <strong>Price:</strong> ₹250 | <button>Buy Now</button></li>
-            <li><strong>Book Title:</strong> 1984 | <strong>Author:</strong> George Orwell | <strong>Price:</strong> ₹400 | <button>Buy Now</button></li>
-            <li><strong>Book Title:</strong> The Alchemist | <strong>Author:</strong> Paulo Coelho | <strong>Price:</strong> ₹350 | <button>Buy Now</button></li>
+  <header class="main-header">
+    <div class="container nav-container">
+      <h1>📚 Book Marketplace</h1>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="sell.html">Sell a Book</a></li>
+          <li><a href="request.html">Request a Book</a></li>
+          <li><a href="cart.html">Shopping Cart</a></li>
+          <li><a href="login_register.html">Login / Register</a></li>
         </ul>
-    </section>
+      </nav>
+    </div>
+  </header>
 
-    <footer>
-        <p>&copy; 2025 Book Marketplace. All rights reserved.</p>
-    </footer>
+  <main class="container">
+    <section class="book-section">
+      <h2>Available Books</h2>
+      <div class="book-grid">
+        <div class="book-card">
+          <h3>The Great Gatsby</h3>
+          <p><strong>Author:</strong> F. Scott Fitzgerald</p>
+          <p><strong>Price:</strong> ₹300</p>
+          <button class="btn">Buy Now</button>
+        </div>
+        <div class="book-card">
+          <h3>To Kill a Mockingbird</h3>
+          <p><strong>Author:</strong> Harper Lee</p>
+          <p><strong>Price:</strong> ₹250</p>
+          <button class="btn">Buy Now</button>
+        </div>
+        <div class="book-card">
+          <h3>1984</h3>
+          <p><strong>Author:</strong> George Orwell</p>
+          <p><strong>Price:</strong> ₹400</p>
+          <button class="btn">Buy Now</button>
+        </div>
+        <div class="book-card">
+          <h3>The Alchemist</h3>
+          <p><strong>Author:</strong> Paulo Coelho</p>
+          <p><strong>Price:</strong> ₹350</p>
+          <button class="btn">Buy Now</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="main-footer">
+    <p>&copy; 2025 Book Marketplace. All rights reserved.</p>
+  </footer>
 </body>
 </html>
