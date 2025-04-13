@@ -1,166 +1,20 @@
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Book Readers - Browse Books</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-  <script src="firebaseConfig.js"></script>
-  <script src="header.js"></script>
-  <style>
-    body {
-      background-color: #f8f9fa;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .navbar {
-      background-color: #4a4e69;
-    }
-    .navbar-brand, .nav-link {
-      color: #f8f9fa !important;
-    }
-    .nav-link:hover {
-      text-decoration: underline;
-    }
-    .book-card {
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 20px;
-      background-color: #fff;
-    }
-    .footer {
-      background-color: #4a4e69;
-      color: white;
-      padding: 10px 0;
-      text-align: center;
-      margin-top: 40px;
-    }
-    #searchBar {
-      margin-bottom: 20px;
-    }
-    #user-info {
-      text-align: right;
-      font-size: 0.9rem;
-      color: gray;
-    }
-    #logoutBtn {
-      margin-top: 5px;
-    }
-  </style>
-</head>
-
-<body>
-  <nav class="navbar navbar-expand-lg">
-    <div class="container">
-      <a class="navbar-brand" href="#">Book Readers</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="sell.html">Sell a Book</a></li>
-          <li class="nav-item"><a class="nav-link" href="request.html">Request a Book</a></li>
-          <li class="nav-item"><a class="nav-link" href="cart.html">Cart</a></li>
-          <li class="nav-item"><a class="nav-link" href="#" id="logoutNav" style="display: none;">Logout</a></li>
-          <li class="nav-item"><a class="nav-link" href="login_register.html" id="loginNav">Login / Register</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <div class="container my-5">
-    <div id="user-info"></div>
-    <button id="logoutBtn" class="btn btn-outline-secondary btn-sm float-end d-none">Logout</button>
-    <h2 class="mb-4">Available Books</h2>
-    <input class="form-control" id="searchBar" type="text" placeholder="Search for books by title or author...">
-
-    <div class="row" id="book-list">
-      <!-- Books from Firebase will be rendered here -->
+<!DOCTYPE html><html><head><title>Browse Books</title><link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css'></head><body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">📚 BookReaders</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="browse.html">Browse</a></li>
+        <li class="nav-item"><a class="nav-link" href="sell.html">Sell</a></li>
+        <li class="nav-item"><a class="nav-link" href="request.html">Request</a></li>
+        <li class="nav-item"><a class="nav-link" href="cart.html">Cart</a></li>
+        <li class="nav-item"><a class="nav-link" href="login_register.html">Login</a></li>
+      </ul>
     </div>
   </div>
-
-  <footer class="footer">
-    <div class="container">
-      <span>&copy; 2025 Book Readers. All rights reserved.</span>
-    </div>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const userInfo = document.getElementById("user-info");
-      const logoutBtn = document.getElementById("logoutBtn");
-      const loginNav = document.getElementById("loginNav");
-      const logoutNav = document.getElementById("logoutNav");
-
-      auth.onAuthStateChanged(user => {
-        const onLoginPage = window.location.pathname.includes('login_register.html');
-
-        if (user) {
-          if (userInfo) userInfo.textContent = `Logged in as ${user.email}`;
-          if (logoutBtn) logoutBtn.classList.remove('d-none');
-          if (logoutNav) logoutNav.style.display = 'inline';
-          if (loginNav) loginNav.style.display = 'none';
-
-          if (onLoginPage) {
-            window.location.href = 'index.html';
-          } else {
-            const bookList = document.getElementById("book-list");
-            if (bookList) {
-              db.collection("books").get().then(snapshot => {
-                snapshot.forEach(doc => {
-                  const data = doc.data();
-                  const card = document.createElement("div");
-                  card.className = "col-md-4 book-item";
-                  card.innerHTML = `
-                    <div class="book-card">
-                      <h5><strong>Book Title:</strong> ${data.title}</h5>
-                      <p><strong>Author:</strong> ${data.author}</p>
-                      <p><strong>Condition:</strong> ${data.condition}</p>
-                      <p><strong>Price:</strong> ₹${data.price}</p>
-                      <button class="btn btn-primary w-100">Add to Cart</button>
-                    </div>
-                  `;
-                  bookList.appendChild(card);
-                });
-              });
-
-              const searchBar = document.getElementById('searchBar');
-              searchBar.addEventListener('keyup', function () {
-                const query = this.value.toLowerCase();
-                document.querySelectorAll('.book-item').forEach(function (item) {
-                  const text = item.innerText.toLowerCase();
-                  item.style.display = text.includes(query) ? '' : 'none';
-                });
-              });
-            }
-          }
-        } else {
-          if (!onLoginPage) {
-            window.location.href = 'login_register.html';
-          }
-        }
-      });
-
-      if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
-          auth.signOut().then(() => window.location.href = 'login_register.html');
-        });
-      }
-
-      if (logoutNav) {
-        logoutNav.addEventListener('click', () => {
-          auth.signOut().then(() => window.location.href = 'login_register.html');
-        });
-      }
-    });
-  </script>
-</body>
-</html>
+</nav>
+<div class='container mt-5'><h2>Browse Books</h2></div></body></html>
