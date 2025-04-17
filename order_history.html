@@ -1,1 +1,142 @@
-<!-- Already updated in canvas -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order History - BookReaders</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="firebaseConfig.js"></script>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background-color: #f9f9f9; }
+    .order-item { background: #fff; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">📚 BookReaders</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto" id="navLinks">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="browse.html">Browse</a></li>
+        <li class="nav-item"><a class="nav-link" href="sell.html">Sell</a></li>
+        <li class="nav-item"><a class="nav-link" href="request.html">Request</a></li>
+        <li class="nav-item"><a class="nav-link" href="cart.html">Cart</a></li>
+        <li class="nav-item"><a class="nav-link active" href="order_history.html">Orders</a></li>
+        <li class="nav-item"><a class="nav-link" href="ebooks.html">eBooks</a></li>
+        <li class="nav-item"><a class="nav-link" href="login_register.html" id="auth-link">Login / Register</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container my-4">
+  <h3 class="text-center">📦 Your Order History</h3>
+  <div id="orderItems"></div>
+</div>
+
+<script>
+  let userId = null;
+  firebase.auth().onAuthStateChanged(user => {
+    if (localStorage.getItem("mockPaymentPending") === "true") {
+      localStorage.removeItem("mockPaymentPending");
+      showMockPayment();
+      return;
+    }
+    const authLink = document.getElementById('auth-link');
+    if (authLink) {
+      authLink.innerHTML = user
+        ? '<a class="nav-link" href="#" onclick="logout()">Logout</a>'
+        : '<a class="nav-link" href="login_register.html">Login / Register</a>';
+    }
+    if (user) {
+      userId = user.uid;
+      loadOrders();
+    } else {
+      document.getElementById('orderItems').innerHTML = '<p class="text-center text-muted">Please login to view your order history.</p>';
+    }
+  });
+
+  function logout() {
+    firebase.auth().signOut().then(() => location.href = 'index.html');
+  }
+
+  function loadOrders() {
+    const db = firebase.firestore();
+    const container = document.getElementById('orderItems');
+    db.collection("orders").doc(userId).collection("userOrders").orderBy("orderedAt", "desc").get().then(snapshot => {
+      container.innerHTML = '';
+      if (snapshot.empty) {
+        container.innerHTML = '<p class="text-center text-muted">No orders found.</p>';
+      } else {
+        snapshot.forEach(doc => {
+          const order = doc.data();
+          const div = document.createElement('div');
+          div.className = 'order-item';
+          div.innerHTML = `
+            <div class="row">
+              <div class="col-md-2">
+                <img src="${order.thumbnail || 'https://via.placeholder.com/80'}" class="img-fluid rounded" alt="cover">
+              </div>
+              <div class="col-md-10">
+                <h5>${order.title}</h5>
+                <p><strong>Author:</strong> ${order.author}</p>
+                <p><strong>Price:</strong> ₹${order.price}</p>
+                <p><strong>Quantity:</strong> ${order.quantity || 1}</p>
+                <p><strong>Ordered At:</strong> ${new Date(order.orderedAt.toDate()).toLocaleString()}</p>
+                <button class="btn btn-outline-primary btn-sm" onclick="downloadInvoice('${doc.id}', ${JSON.stringify(order).replace(/'/g, "\'")})">Download Invoice</button>
+              </div>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+      }
+    });
+  }
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  async function downloadInvoice(orderId, orderData) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.setFontSize(16);
+    doc.text("Invoice - BookReaders", 20, 20);
+    doc.setFontSize(12);
+    doc.text(`Order ID: ${orderId}`, 20, 40);
+    doc.text(`Title: ${orderData.title}`, 20, 50);
+    doc.text(`Author: ${orderData.author}`, 20, 60);
+    doc.text(`Quantity: ${orderData.quantity || 1}`, 20, 70);
+    doc.text(`Price: ₹${orderData.price}`, 20, 80);
+    doc.text(`Ordered At: ${new Date(orderData.orderedAt.toDate()).toLocaleString()}`, 20, 90);
+
+    doc.save(`Invoice_${orderId}.pdf`);
+  }
+</script>
+<script>
+  function showMockPayment() {
+    const container = document.getElementById('orderItems');
+    container.innerHTML = `
+      <div class="text-center my-5">
+        <h4>💳 Mock Payment Gateway</h4>
+        <p>This is a simulated payment confirmation screen.</p>
+        <button class="btn btn-success" onclick="completePayment()">Confirm Payment</button>
+      </div>
+    `;
+  }
+
+  function completePayment() {
+    alert('✅ Payment confirmed! Thank you for your purchase.');
+    location.href = 'order_history.html';
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

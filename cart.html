@@ -1,1 +1,151 @@
-<!-- Reset cart page -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cart - BookReaders</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="firebaseConfig.js"></script>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background-color: #f9f9f9; }
+    .cart-item { background: #fff; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">📚 BookReaders</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto" id="navLinks">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="browse.html">Browse</a></li>
+        <li class="nav-item"><a class="nav-link" href="sell.html">Sell</a></li>
+        <li class="nav-item"><a class="nav-link" href="request.html">Request</a></li>
+        <li class="nav-item"><a class="nav-link active" href="cart.html">Cart</a></li>
+        <li class="nav-item"><a class="nav-link" href="order_history.html">Orders</a></li>
+        <li class="nav-item"><a class="nav-link" href="ebooks.html">eBooks</a></li>
+        <li class="nav-item"><a class="nav-link" href="login_register.html" id="auth-link">Login / Register</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container my-4">
+  <h3 class="text-center">🛒 Your Cart</h3>
+  <div id="cartItems"></div>
+  <div class="text-end mt-4">
+    <h5 id="total"></h5>
+    <button class="btn btn-success" onclick="checkout()">Checkout</button>
+  </div>
+</div>
+
+<script>
+  let userId = null;
+  firebase.auth().onAuthStateChanged(user => {
+    const authLink = document.getElementById('auth-link');
+    if (authLink) {
+      authLink.innerHTML = user
+        ? '<a class="nav-link" href="#" onclick="logout()">Logout</a>'
+        : '<a class="nav-link" href="login_register.html">Login / Register</a>';
+    }
+    if (user) {
+      userId = user.uid;
+      loadCart();
+    } else {
+      document.getElementById('cartItems').innerHTML = '<p class="text-center text-muted">Please login to view your cart.</p>';
+    }
+  });
+
+  function logout() {
+    firebase.auth().signOut().then(() => location.href = 'index.html');
+  }
+
+  function loadCart() {
+    const db = firebase.firestore();
+    const cartContainer = document.getElementById('cartItems');
+    db.collection("carts").doc(userId).collection("items").get().then(snapshot => {
+      let total = 0;
+      cartContainer.innerHTML = '';
+      if (snapshot.empty) {
+        cartContainer.innerHTML = '<p class="text-center text-muted">Your cart is empty.</p>';
+        document.getElementById('total').innerText = '';
+      } else {
+        snapshot.forEach(doc => {
+          const item = doc.data();
+          const div = document.createElement('div');
+          div.className = 'cart-item';
+          div.innerHTML = `
+            <div class="row">
+              <div class="col-md-2">
+                <img src="${item.thumbnail || 'https://via.placeholder.com/80'}" alt="cover" class="img-fluid rounded" />
+              </div>
+              <div class="col-md-10">
+                <h5>${item.title}</h5>
+                <p><strong>Author:</strong> ${item.author}</p>
+                <p><strong>Price:</strong> ₹${item.price}</p>
+                <p><strong>Quantity:</strong>
+                  <input type="number" min="1" value="${item.quantity || 1}"
+                         onchange="updateQuantity('${doc.id}', this.value)"
+                         class="form-control d-inline-block w-auto" />
+                </p>
+                <button class="btn btn-sm btn-danger" onclick="removeItem('${doc.id}')">Remove</button>
+              </div>
+            </div>`;
+          cartContainer.appendChild(div);
+          total += item.price * (item.quantity || 1);
+        });
+        document.getElementById('total').innerText = `Total: ₹${total}`;
+      }
+    });
+  }
+
+  function updateQuantity(itemId, quantity) {
+    quantity = Math.max(1, parseInt(quantity));
+    const db = firebase.firestore();
+    db.collection("carts").doc(userId).collection("items").doc(itemId).update({ quantity }).then(() => {
+      loadCart();
+    });
+  }
+
+  function removeItem(itemId) {
+    const db = firebase.firestore();
+    db.collection("carts").doc(userId).collection("items").doc(itemId).delete().then(() => {
+      loadCart();
+    });
+  }
+
+  function checkout() {
+    const db = firebase.firestore();
+    const cartRef = db.collection("carts").doc(userId).collection("items");
+    const ordersRef = db.collection("orders").doc(userId).collection("userOrders");
+
+    cartRef.get().then(snapshot => {
+      const batch = db.batch();
+      const timestamp = new Date();
+
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const newOrderRef = ordersRef.doc();
+        batch.set(newOrderRef, { ...data, orderedAt: timestamp });
+        batch.delete(doc.ref);
+      });
+
+      return batch.commit();
+    }).then(() => {
+      localStorage.setItem("mockPaymentPending", "true");
+      location.href = "order_history.html";
+    }).catch(err => {
+      console.error("Checkout error:", err);
+      alert("❌ Failed to place order.");
+    });
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
